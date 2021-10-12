@@ -6,6 +6,9 @@ authors = ["Iuri Diniz <iuridiniz@gmail.com>"]
 license = "MIT"
 keywords = ["pam", "sshd", "ssh", "slack"]
 repository = "https://github.com/iuridiniz/pam-send-slack-message/"
+description = "pam-send-slack-message is a program that publishes messages on Slack when the linux server is accessed through ssh"
+
+[dependencies]
 
 [dependencies]
 log = "0.4.14"

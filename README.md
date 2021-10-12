@@ -1,6 +1,6 @@
 # pam-send-slack-message
 
-pam-send-slack-message is a program that post messages on slack when the linux server is accessed through ssh.
+pam-send-slack-message is a program that publishes messages on slack when the linux server is accessed through ssh.
 
 ## Binary installation
 
