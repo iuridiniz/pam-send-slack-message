@@ -4,7 +4,7 @@ pam-send-slack-message is a program that publishes messages on slack when the li
 
 ## Binary installation
 
-Go to releases page and download last release.
+Go to [releases page](https://github.com/iuridiniz/pam-send-slack-message/releases) and download last release.
 
 ```bash
 sudo mkdir -p /usr/local/bin/
