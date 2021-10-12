@@ -31,7 +31,7 @@ After configuration, just log via ssh.
 
 ### Manual compilation
 
-Pre-requisites: you need is a working cargo + rust compiler, make and gcc.
+Pre-requisites: All you need is a working cargo + rust compiler, make and gcc.
 
 ```bash
 make clean
