@@ -38,14 +38,14 @@ fn get_ssh_auth_info() -> SshAuthInfo {
         return info;
     }
     let ssh_auth_info_0 = ssh_auth_info_0.unwrap();
-    let parts = ssh_auth_info_0.split(" ").collect::<Vec<_>>();
+    let parts = ssh_auth_info_0.split(' ').collect::<Vec<_>>();
     if parts.len() >= 3 {
         info.key = parts[2].trim().to_string();
     }
     if parts.len() >= 2 {
         info.kind = parts[1].trim().to_string();
     }
-    if parts.len() >= 1 {
+    if !parts.is_empty() {
         info.method = parts[0].trim().to_string();
     }
     info
