@@ -19,7 +19,7 @@ $(BINARY): $(wildcard src/*.rs) Cargo.toml
 # X86_64 musl
 $(BINARY).x86_64.musl: $(wildcard src/*.rs) Cargo.toml
 	make _cross TARGET_BINARY=$@ TARGET_TRIPLE=x86_64-unknown-linux-musl
-	strip $@
+	x86_64-linux-gnu-strip $@
 	du -hs $@
 
 $(BINARY).x86_64.musl.upx: $(BINARY).x86_64.musl
@@ -28,6 +28,8 @@ $(BINARY).x86_64.musl.upx: $(BINARY).x86_64.musl
 # i686 musl
 $(BINARY).i686.musl: $(wildcard src/*.rs) Cargo.toml
 	make _cross TARGET_BINARY=$@ TARGET_TRIPLE=i686-unknown-linux-musl
+	i686-linux-gnu-strip $@
+	du -hs $@
 
 $(BINARY).i686.musl.upx: $(BINARY).i686.musl
 	make _upx TARGET_BINARY=$@ SOURCE_BINARY=$<
@@ -35,6 +37,8 @@ $(BINARY).i686.musl.upx: $(BINARY).i686.musl
 # AARCH64 musl
 $(BINARY).aarch64.musl: $(wildcard src/*.rs) Cargo.toml
 	make _cross TARGET_BINARY=$@ TARGET_TRIPLE=aarch64-unknown-linux-musl
+	aarch64-linux-gnu-strip $@
+	du -hs $@
 
 $(BINARY).aarch64.musl.upx: $(BINARY).aarch64.musl
 	make _upx TARGET_BINARY=$@ SOURCE_BINARY=$<
@@ -45,6 +49,7 @@ _cross:
 	# cargo install cross
 	cross build --release --target $(TARGET_TRIPLE)
 	cp target/$(TARGET_TRIPLE)/release/$(BINARY) $(TARGET_BINARY)
+	du -hs target/$(TARGET_TRIPLE)/release/$(BINARY)
 
 # needs upx
 # see https://upx.github.io/
