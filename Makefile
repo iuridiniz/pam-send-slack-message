@@ -1,4 +1,4 @@
-.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx
+.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release
 
 BINARY=pam-send-slack-message
 
@@ -90,6 +90,12 @@ fake-close-session: $(BINARY)
 		PAM_SERVICE=sshd \
 		SSH_AUTH_INFO_0="password" \
 		./$(BINARY) $(SLACK_CHANNEL_ID) $(SLACK_TOKEN)
+
+release: cross sha1sum.txt
+
+sha1sum.txt: cross
+	rm -f sha1sum.txt
+	sha1sum pam-send-slack-message.* | tee sha1sum.txt
 
 clean:
 	rm -f $(BINARY) $(BINARY).*

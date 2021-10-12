@@ -3,3 +3,4 @@
 /pam-send-slack-message.*
 .envrc
 *.http
+sha1sum.txt
