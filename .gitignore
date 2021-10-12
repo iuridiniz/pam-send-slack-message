@@ -1,0 +1,5 @@
+/target
+/pam-send-slack-message
+/pam-send-slack-message.*
+.envrc
+*.http

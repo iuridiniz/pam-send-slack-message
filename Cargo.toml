@@ -1,0 +1,23 @@
+[package]
+name = "pam-send-slack-message"
+version = "0.1.0"
+edition = "2018"
+authors = ["Iuri Diniz <iuridiniz@gmail.com>"]
+license = "MIT"
+keywords = ["pam", "sshd", "ssh", "slack"]
+repository = "https://github.com/iuridiniz/pam-send-slack-message/"
+
+[dependencies]
+log = "0.4.14"
+reqwest = { version = "0.11.5", features = ["blocking", "rustls-tls"], default-features = false }
+# reqwest = { version = "0.11.5", features = ["blocking", "native-tls-vendored"], default-features = false }
+simple_logger = {version = "1.13.0", features = ["stderr"]}
+ellipse = "0.2.0"
+chrono = "0.4.19"
+chrono-tz = "0.6.0"
+gethostname = "0.2.1"
+
+[profile.release]
+lto = true
+panic = "abort"
+opt-level = "z"

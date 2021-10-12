@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#####################
+# the following variables are present when called from pam after sshd
+export PAM_TTY=ssh
+export PAM_USER=root
+# export PWD=/
+# export XDG_SESSION_TYPE=tty
+# export MOTD_SHOWN=pam
+# export LANG=C.UTF-8
+export PAM_RHOST=10.130.211.1
+export SSH_CONNECTION="10.130.211.1 44494 10.130.211.149 22"
+export PAM_SERVICE=sshd
+# export XDG_SESSION_CLASS=user
+# export SHLVL=1
+# export XDG_SESSION_ID=139
+# export XDG_RUNTIME_DIR="/run/user/0"
+# export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+# export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/0/bus
+export SSH_AUTH_INFO_0="publickey ssh-rsa BBBBB3NzBC1yc2EBBBBBIwBBBQEBtJYwzqB6n8TuPcEM9XQ9sGORkqIsXk63mK5z6BPq4uf2khuiBP4yett/CX3BK/xytyhhJyGxzCP2Z19PTP/vN3ZTIUXBpBVsR7Ew46XZOBB6mlGMxR8y0gcesllY/6VUivTJM22eF2IWEQ/BKLPCQuM5sbL5+BIS8nzjntMO+Rr0yW6hfw9tzPEbfBvSGycuMoBlisJCgRMkhB3YOPh3eCLBP/clzQ8249Xmn0iUJtBbP016hXjc69RwYBIok2mEhqsgm67yh/HMkB0IiNHp+vPqUexJ7hB3uNcMrBv9B2ykxBKC2WRS040Or2O9OWOBRUw+PiNM7UOOBPkinzPzuw=="
+export PAM_TYPE=open_session
+# export PAM_TYPE=close_session
+
+#######################
+# replace the following with your own token and channel id
+export SLACK_TOKEN=xoxp-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+export SLACK_CHANNEL_ID=C00000ZZZZZ
