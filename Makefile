@@ -64,7 +64,7 @@ install: $(BINARY)
 	install -b -m 0755 -p $(BINARY) $(DESTDIR)/$(BINARY)
 
 	@echo "Editing $(PAM_SSHD_CONFIG) if needed"
-	@grep -qE '^session optional pam_exec.so .* $(DESTDIR)/$(BINARY)' $(PAM_SSHD_CONFIG) || \
+	@grep -qE '^session optional pam_exec.so.* $(DESTDIR)/$(BINARY)' $(PAM_SSHD_CONFIG) || \
 		echo 'session optional pam_exec.so $(DESTDIR)/$(BINARY) $(SLACK_CHANNEL_ID) $(SLACK_TOKEN)' >> $(PAM_SSHD_CONFIG)
 
 	chmod o-r $(PAM_SSHD_CONFIG)
