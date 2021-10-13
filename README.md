@@ -2,7 +2,7 @@
 
 pam-send-slack-message is a program that publishes messages on slack when the linux server is accessed through ssh.
 
-## Binary installation
+## Installation
 
 Go to [releases page](https://github.com/iuridiniz/pam-send-slack-message/releases) and download last release.
 
@@ -13,15 +13,21 @@ sudo cp pam-send-slack-message.$(uname -m).musl.upx /usr/local/bin/pam-send-slac
 chmod +x /usr/local/bin/pam-send-slack-message
 ```
 
-## pam/sshd configuration
-
-You need a SLACK-TOKEN with `channel.write` permission and a SLACK-CHANNEL-ID. Follow instructions [here](https://api.slack.com/messaging/sending), if you are lost.
-
-```bash
+In order to work, you need a `SLACK-TOKEN` with `channel.write` permission and a `SLACK-CHANNEL-ID`. Follow instructions [here](https://api.slack.com/messaging/sending), if you are lost.
+```
+# configure pam/sshd
 echo "session optional pam_exec.so /usr/local/bin/pam-send-slack-message SLACK-CHANNEL-ID SLACK-TOKEN" | sudo tee /etc/pam.d/sshd 
 
 # assure token cannot be viewed by any ordinary user 
 sudo chmod o-r /etc/pam.d/sshd
+```
+
+## pam/sshd configuration
+
+This program need to be called by pam at session phase, you must add change `/etc/pam.d/sshd` to have this line:
+
+```
+session optional pam_exec.so /path/to/pam-send-slack-message SLACK-CHANNEL-ID SLACK-TOKEN
 ```
 
 ## Usage
@@ -41,7 +47,7 @@ make all
 
 ### Testing
 
-In order to test, you need a SLACK-TOKEN with `channel.write` permission and a SLACK-CHANNEL-ID
+In order to test, you need a `SLACK-TOKEN `with `channel.write` permission and a `SLACK-CHANNEL-ID`.
 
 Simulate a pam login using ssh:
 
@@ -64,7 +70,7 @@ direnv allow .
 
 ### Enable logs when using inside pam
 
-change /etc/pam.d/sshd to:
+change `/etc/pam.d/sshd` to:
 
 ```
 session optional pam_exec.so debug log=/tmp/file_to_log.txt /usr/local/bin/pam-send-slack-message SLACK-CHANNEL-ID SLACK-TOKEN
