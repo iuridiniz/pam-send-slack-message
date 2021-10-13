@@ -22,17 +22,18 @@ echo "session optional pam_exec.so /usr/local/bin/pam-send-slack-message SLACK-C
 sudo chmod o-r /etc/pam.d/sshd
 ```
 
-## pam/sshd configuration
+
+## Usage
+
+After configuration, just log via ssh.
+
+### pam/sshd configuration
 
 This program need to be called by pam at session phase, you must change `/etc/pam.d/sshd` to have this line:
 
 ```
 session optional pam_exec.so /path/to/pam-send-slack-message SLACK-CHANNEL-ID SLACK-TOKEN
 ```
-
-## Usage
-
-After configuration, just log via ssh.
 
 ## Hacking
 
