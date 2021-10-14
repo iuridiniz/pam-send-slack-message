@@ -17,7 +17,7 @@ impl std::fmt::Display for SshAuthInfo {
             "{} {} {}",
             self.method,
             self.kind,
-            self.key.as_str().truncate_ellipse(20)
+            self.key.as_str().truncate_ellipse(40)
         );
         write!(f, "{}", msg.trim())
     }
