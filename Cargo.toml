@@ -12,7 +12,7 @@ description = "pam helper that publishes messages on Slack based on ssh access"
 [package.metadata.deb]
 extended-description = """\
 pam-send-slack-message is a program that publishes messages on slack when the linux server is accessed through ssh."""
-recommends = ["openssh-server"]
+recommends = "openssh-server"
 
 [dependencies]
 log = "0.4.14"

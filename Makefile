@@ -1,4 +1,4 @@
-.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release deb
+.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release deb _deb
 
 BINARY=pam-send-slack-message
 
@@ -62,6 +62,12 @@ _upx:
 	du -hs $(SOURCE_BINARY) $(TARGET_BINARY)
 	touch $(TARGET_BINARY)
 
+# requires cargo-deb
+# https://github.com/mmstick/cargo-deb#readme
+deb: $(BINARY).x86_64.musl $(BINARY).i686.musl
+	cargo deb -o ./ --target x86_64-unknown-linux-musl --no-build
+	cargo deb -o ./ --target i686-unknown-linux-musl --no-build
+
 # requires nightly, rust-src, rust-std
 # $(BINARY).musl-optz: $(wildcard src/*.rs) Cargo.toml
 # 	RUSTFLAGS="$(RUSTFLAGS) -L/usr/lib/x86_64-linux-musl/ -Copt-level=z -Cpanic=abort" cargo +nightly build -v -Z unstable-options -Z build-std=std,panic_abort -Z build-std-features=panic_immediate_abort --release --target x86_64-unknown-linux-musl
@@ -101,10 +107,7 @@ fake-close-session: $(BINARY)
 
 release: cross sha1sum.txt
 
-# requires cargo-deb
-# https://github.com/mmstick/cargo-deb#readme
-deb:
-	cargo deb -o ./
+
 
 sha1sum.txt: $(CROSS_BINARIES)
 	rm -f sha1sum.txt
