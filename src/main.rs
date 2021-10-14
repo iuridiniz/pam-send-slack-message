@@ -92,7 +92,7 @@ fn open_session(channel_id: String, token: String) {
     // https://api.slack.com/reference/surfaces/formatting
     // TODO: use a external template
     let msg = format!(
-        "<!here> 🕵️ ▶️▶️▶️ IP `{}` logged in `{}` as `{}` using `{}` at `{}`",
+        "🕵️ ▶️▶️▶️ IP `{}` logged in `{}` as `{}` using `{}` at `{}`",
         addr, host, user, auth_info, when
     );
 
@@ -116,7 +116,7 @@ fn close_session(channel_id: String, token: String) {
     // https://api.slack.com/reference/surfaces/formatting
     // TODO: use a external template
     let msg = format!(
-        "<!here> 🕵️ 🛑🛑🛑 IP `{}` logout from `{}` (is was `{}` using `{}`) at `{}`",
+        "🕵️ 🛑🛑🛑 IP `{}` logout from `{}` (is was `{}` using `{}`) at `{}`",
         addr, host, user, auth_info, when
     );
     info!("{}", msg);
