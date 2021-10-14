@@ -1,4 +1,4 @@
-.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release deb _deb
+.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release deb deb-x86_64 deb-i686
 
 BINARY=pam-send-slack-message
 
@@ -64,8 +64,12 @@ _upx:
 
 # requires cargo-deb
 # https://github.com/mmstick/cargo-deb#readme
-deb: $(BINARY).x86_64.musl $(BINARY).i686.musl
+deb: deb-x86_64
+
+deb-x86_64: $(BINARY).x86_64.musl
 	cargo deb -o ./ --target x86_64-unknown-linux-musl --no-build
+
+deb-i686: $(BINARY).i686.musl
 	cargo deb -o ./ --target i686-unknown-linux-musl --no-build
 
 # requires nightly, rust-src, rust-std
