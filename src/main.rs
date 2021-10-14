@@ -88,8 +88,11 @@ fn open_session(channel_id: String, token: String) {
     let host = get_hostname();
     let auth_info = get_ssh_auth_info();
     let when = chrono::Local::now().with_timezone(&Fortaleza).to_rfc2822();
+
+    // https://api.slack.com/reference/surfaces/formatting
+    // TODO: use a external template
     let msg = format!(
-        "IP {} logged in {} as {} using {} at {}",
+        "<!here> 🕵️ ▶️▶️▶️ IP `{}` logged in `{}` as `{}` using `{}` at `{}`",
         addr, host, user, auth_info, when
     );
 
@@ -110,8 +113,10 @@ fn close_session(channel_id: String, token: String) {
     let auth_info = get_ssh_auth_info();
     let when = chrono::Local::now().with_timezone(&Fortaleza).to_rfc2822();
 
+    // https://api.slack.com/reference/surfaces/formatting
+    // TODO: use a external template
     let msg = format!(
-        "IP {} logout from {} (is was {} using {}) at {}",
+        "<!here> 🕵️ 🛑🛑🛑 IP `{}` logout from `{}` (is was `{}` using `{}`) at `{}`",
         addr, host, user, auth_info, when
     );
     info!("{}", msg);
