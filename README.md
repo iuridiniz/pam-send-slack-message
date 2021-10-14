@@ -16,7 +16,7 @@ chmod +x /usr/local/bin/pam-send-slack-message
 In order to work, you need a `SLACK-TOKEN` with `channel.write` permission and a `SLACK-CHANNEL-ID`. Follow instructions [here](https://api.slack.com/messaging/sending), if you are lost.
 ```
 # configure pam/sshd
-echo "session optional pam_exec.so /usr/local/bin/pam-send-slack-message SLACK-CHANNEL-ID SLACK-TOKEN" | sudo tee /etc/pam.d/sshd 
+echo "session optional pam_exec.so /usr/local/bin/pam-send-slack-message SLACK-CHANNEL-ID SLACK-TOKEN" | sudo tee -a /etc/pam.d/sshd 
 
 # assure token cannot be viewed by any ordinary user 
 sudo chmod o-r /etc/pam.d/sshd
