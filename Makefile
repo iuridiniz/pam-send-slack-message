@@ -1,4 +1,4 @@
-.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release
+.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release deb
 
 BINARY=pam-send-slack-message
 
@@ -101,11 +101,16 @@ fake-close-session: $(BINARY)
 
 release: cross sha1sum.txt
 
+# requires cargo-deb
+# https://github.com/mmstick/cargo-deb#readme
+deb:
+	cargo deb -o ./
+
 sha1sum.txt: $(CROSS_BINARIES)
 	rm -f sha1sum.txt
 	sha1sum pam-send-slack-message.* | tee sha1sum.txt
 
 clean:
-	rm -f $(BINARY) $(BINARY).*
+	rm -f $(BINARY) $(BINARY).* $(BINARY)_*.deb
 	cargo clean
 
