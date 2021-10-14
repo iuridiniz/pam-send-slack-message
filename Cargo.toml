@@ -7,7 +7,12 @@ license = "MIT"
 keywords = ["pam", "sshd", "ssh", "slack"]
 readme = "README.md"
 repository = "https://github.com/iuridiniz/pam-send-slack-message/"
-description = "pam-send-slack-message is a program that publishes messages on Slack when a linux server is accessed through ssh"
+description = "pam helper that publishes messages on Slack based on ssh access"
+
+[package.metadata.deb]
+extended-description = """\
+pam-send-slack-message is a program that publishes messages on slack when the linux server is accessed through ssh."""
+recommends = ["openssh-server"]
 
 [dependencies]
 log = "0.4.14"
