@@ -1,6 +1,7 @@
 /target
 /pam-send-slack-message
 /pam-send-slack-message.*
+/pam-send-slack-message_*.deb
 .envrc
 *.http
 sha1sum.txt
