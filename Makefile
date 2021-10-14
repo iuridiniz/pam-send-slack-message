@@ -7,14 +7,17 @@ PAM_SSHD_CONFIG ?= /etc/pam.d/sshd
 SLACK_CHANNEL_ID ?= slack_channel_id
 SLACK_TOKEN ?= slack_token
 
+
+CROSS_BINARIES=$(BINARY).x86_64.musl.upx $(BINARY).aarch64.musl.upx $(BINARY).i686.musl.upx
+
 all: $(BINARY)
-cross: $(BINARY).x86_64.musl.upx $(BINARY).aarch64.musl.upx $(BINARY).i686.musl.upx
+cross: $(CROSS_BINARIES)
 
 $(BINARY): $(wildcard src/*.rs) Cargo.toml
-	cargo build --release
-	cp target/release/$(BINARY) $(BINARY)
+	cargo build
+	cp target/debug/$(BINARY) $(BINARY)
 	strip $(BINARY)
-	du -hs target/release/$(BINARY) $(BINARY)
+	du -hs target/debug/$(BINARY) $(BINARY)
 
 # X86_64 musl
 $(BINARY).x86_64.musl: $(wildcard src/*.rs) Cargo.toml
@@ -98,7 +101,7 @@ fake-close-session: $(BINARY)
 
 release: cross sha1sum.txt
 
-sha1sum.txt: cross
+sha1sum.txt: $(CROSS_BINARIES)
 	rm -f sha1sum.txt
 	sha1sum pam-send-slack-message.* | tee sha1sum.txt
 
