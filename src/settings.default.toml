@@ -1,0 +1,7 @@
+slack_token = "<TOKEN>"
+slack_channel_id = "<CHANNEL_ID>"
+# see https://api.slack.com/reference/surfaces/formatting
+open_session_message = """🕵️ ▶️▶️▶️ IP `{addr}` logged in `{hostname}` as `{user}` using `{auth_info}` at `{when}`"""
+close_session_message = """🕵️ 🛑🛑🛑 IP `{addr}` logout from `{hostname}` (is was `{user}` using `{auth_info}`) at `{when}`"""
+# could be "America/Sao_Paulo" or "America/Los_Angeles" or "Europe/Oslo"
+timezone = "UTC"
