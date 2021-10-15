@@ -23,7 +23,7 @@ In order to work, you need a `SLACK-TOKEN` with `channel.write` permission and a
 echo "session optional pam_exec.so /usr/local/bin/pam-send-slack-message | sudo tee -a /etc/pam.d/sshd 
 ```
 
-create a file `/etc/pam.d/pam-send-slack-message.conf` with the following content:
+create a file `/etc/pam.d/pam-send-slack-message.toml` with the following content:
 
 ```ini
 slack_token = "<SLACK-TOKEN>"
