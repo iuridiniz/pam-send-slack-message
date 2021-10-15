@@ -1,4 +1,4 @@
-.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release deb deb-x86_64 deb-i686
+.PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release deb deb-x86_64 deb-i686 deb-arm64
 
 BINARY=pam-send-slack-message
 
@@ -6,7 +6,6 @@ DESTDIR ?= /usr/local/bin
 PAM_SSHD_CONFIG ?= /etc/pam.d/sshd
 SLACK_CHANNEL_ID ?= slack_channel_id
 SLACK_TOKEN ?= slack_token
-
 
 CROSS_BINARIES=$(BINARY).x86_64.musl.upx $(BINARY).aarch64.musl.upx $(BINARY).i686.musl.upx
 
@@ -67,10 +66,14 @@ _upx:
 deb: deb-x86_64
 
 deb-x86_64: $(BINARY).x86_64.musl
-	cargo deb -o ./ --target x86_64-unknown-linux-musl --no-build
+	cargo deb -v -o ./ --target x86_64-unknown-linux-musl --no-build
 
 deb-i686: $(BINARY).i686.musl
-	cargo deb -o ./ --target i686-unknown-linux-musl --no-build
+	cargo deb -v -o ./ --target i686-unknown-linux-musl --no-build
+
+# requires `[target.aarch64-unknown-linux-musl] strip = { path = "aarch64-linux-gnu-strip" }` in .cargo/config
+deb-arm64: $(BINARY).aarch64.musl
+	cargo deb -v -o ./ --target aarch64-unknown-linux-musl --no-build
 
 # requires nightly, rust-src, rust-std
 # $(BINARY).musl-optz: $(wildcard src/*) Cargo.toml
