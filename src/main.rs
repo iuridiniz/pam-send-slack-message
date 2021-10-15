@@ -135,7 +135,9 @@ fn main() {
 
     let config_file = format!("/etc/{}", env!("CARGO_PKG_NAME"));
     let settings = Settings::new(config_file.as_str());
-    // dbg!(&settings);
+    if cfg!(debug_assertions) {
+        dbg!(&settings);
+    }
 
     if settings.is_err() {
         eprintln!("Cannot read settings: {:?}", settings.err());

@@ -21,6 +21,11 @@ impl Settings {
             FileFormat::Toml,
         ))?;
 
+        if cfg!(debug_assertions) {
+            // Merge in the "development" configuration file
+            s.merge(File::new("./settings.toml", FileFormat::Toml).required(false))?;
+        }
+
         // Add some settings from environment variables
         match env::var("SLACK_TOKEN") {
             Ok(token) => {
