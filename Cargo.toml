@@ -1,6 +1,6 @@
 [package]
 name = "pam-send-slack-message"
-version = "0.1.2"
+version = "0.2.0"
 edition = "2018"
 authors = ["Iuri Diniz <iuridiniz@gmail.com>"]
 license = "MIT"
@@ -13,6 +13,13 @@ description = "pam helper that publishes messages on Slack based on ssh access"
 extended-description = """\
 pam-send-slack-message is a program that publishes messages on slack when the linux server is accessed through ssh."""
 recommends = "openssh-server"
+assets = [
+    ["target/release/pam-send-slack-message", "/usr/bin/pam-send-slack-message", "755"],
+    ["src/settings.default.toml", "etc/pam-send-slack-message.toml", "600"],
+    ["README.md", "usr/share/doc/pam-send-slack-message/README", "644" ],
+    ["LICENSE", "usr/share/doc/pam-send-slack-message/LICENSE", "644" ],
+]
+conf-files = ["etc/pam-send-slack-message.toml"]
 
 [dependencies]
 log = "0.4.14"
@@ -23,6 +30,8 @@ ellipse = "0.2.0"
 chrono = "0.4.19"
 chrono-tz = "0.6.0"
 gethostname = "0.2.1"
+config = "0.11.0"
+serde = { version = "1.0.130", features = ["derive"] }
 
 [profile.release]
 lto = true

@@ -13,14 +13,14 @@ CROSS_BINARIES=$(BINARY).x86_64.musl.upx $(BINARY).aarch64.musl.upx $(BINARY).i6
 all: $(BINARY)
 cross: $(CROSS_BINARIES)
 
-$(BINARY): $(wildcard src/*.rs) Cargo.toml
+$(BINARY): $(wildcard src/*) Cargo.toml
 	cargo build
 	cp target/debug/$(BINARY) $(BINARY)
 	strip $(BINARY)
 	du -hs target/debug/$(BINARY) $(BINARY)
 
 # X86_64 musl
-$(BINARY).x86_64.musl: $(wildcard src/*.rs) Cargo.toml
+$(BINARY).x86_64.musl: $(wildcard src/*) Cargo.toml
 	make _cross TARGET_BINARY=$@ TARGET_TRIPLE=x86_64-unknown-linux-musl
 	x86_64-linux-gnu-strip $@
 	du -hs $@
@@ -29,7 +29,7 @@ $(BINARY).x86_64.musl.upx: $(BINARY).x86_64.musl
 	make _upx TARGET_BINARY=$@ SOURCE_BINARY=$<
 
 # i686 musl
-$(BINARY).i686.musl: $(wildcard src/*.rs) Cargo.toml
+$(BINARY).i686.musl: $(wildcard src/*) Cargo.toml
 	make _cross TARGET_BINARY=$@ TARGET_TRIPLE=i686-unknown-linux-musl
 	i686-linux-gnu-strip $@
 	du -hs $@
@@ -38,7 +38,7 @@ $(BINARY).i686.musl.upx: $(BINARY).i686.musl
 	make _upx TARGET_BINARY=$@ SOURCE_BINARY=$<
 
 # AARCH64 musl
-$(BINARY).aarch64.musl: $(wildcard src/*.rs) Cargo.toml
+$(BINARY).aarch64.musl: $(wildcard src/*) Cargo.toml
 	make _cross TARGET_BINARY=$@ TARGET_TRIPLE=aarch64-unknown-linux-musl
 	aarch64-linux-gnu-strip $@
 	du -hs $@
@@ -73,7 +73,7 @@ deb-i686: $(BINARY).i686.musl
 	cargo deb -o ./ --target i686-unknown-linux-musl --no-build
 
 # requires nightly, rust-src, rust-std
-# $(BINARY).musl-optz: $(wildcard src/*.rs) Cargo.toml
+# $(BINARY).musl-optz: $(wildcard src/*) Cargo.toml
 # 	RUSTFLAGS="$(RUSTFLAGS) -L/usr/lib/x86_64-linux-musl/ -Copt-level=z -Cpanic=abort" cargo +nightly build -v -Z unstable-options -Z build-std=std,panic_abort -Z build-std-features=panic_immediate_abort --release --target x86_64-unknown-linux-musl
 # 	cp target/x86_64-unknown-linux-musl/release/$(BINARY) $(BINARY).musl-optz
 # 	strip $(BINARY).musl-optz
@@ -110,8 +110,6 @@ fake-close-session: $(BINARY)
 		./$(BINARY) $(SLACK_CHANNEL_ID) $(SLACK_TOKEN)
 
 release: cross sha1sum.txt
-
-
 
 sha1sum.txt: $(CROSS_BINARIES)
 	rm -f sha1sum.txt

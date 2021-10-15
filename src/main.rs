@@ -1,8 +1,14 @@
 use ellipse::Ellipse;
-use log::{error, info};
+use log::{error, info, warn};
 use simple_logger::SimpleLogger;
 
-use chrono_tz::America::Fortaleza;
+mod settings;
+use settings::Settings;
+
+enum PamType {
+    OpenSession,
+    CloseSession,
+}
 
 #[derive(Default, Debug)]
 struct SshAuthInfo {
@@ -82,44 +88,39 @@ fn send_slack_msg(
         .send()
 }
 
-fn open_session(channel_id: String, token: String) {
-    let user = get_user();
-    let addr = get_remote_ip();
-    let host = get_hostname();
-    let auth_info = get_ssh_auth_info();
-    let when = chrono::Local::now().with_timezone(&Fortaleza).to_rfc2822();
-
-    // https://api.slack.com/reference/surfaces/formatting
-    // TODO: use a external template
-    let msg = format!(
-        "🕵️ ▶️▶️▶️ IP `{}` logged in `{}` as `{}` using `{}` at `{}`",
-        addr, host, user, auth_info, when
-    );
-
-    info!("{}", msg);
-    let res = send_slack_msg(channel_id, token, msg);
-    if res.is_err() {
-        error!("Cannot send slack message");
-        return;
+fn handle_pam(settings: Settings, pam_type: PamType) {
+    let channel_id = settings.slack_channel_id.clone();
+    let token = settings.slack_token.clone();
+    let tz: Result<chrono_tz::Tz, _> = settings.timezone.parse();
+    let when;
+    if tz.is_ok() {
+        when = chrono::Utc::now().with_timezone(&tz.unwrap()).to_rfc2822();
+    } else {
+        warn!("invalid timezone `{}`, using utc", settings.timezone);
+        when = chrono::Utc::now().to_rfc2822();
     }
-    let body = res.unwrap().text().unwrap();
-    info!("API response:\n==mark==\n{}\n==mark==", body);
-}
 
-fn close_session(channel_id: String, token: String) {
     let user = get_user();
     let addr = get_remote_ip();
-    let host = get_hostname();
+    let hostname = get_hostname();
     let auth_info = get_ssh_auth_info();
-    let when = chrono::Local::now().with_timezone(&Fortaleza).to_rfc2822();
 
-    // https://api.slack.com/reference/surfaces/formatting
-    // TODO: use a external template
-    let msg = format!(
-        "🕵️ 🛑🛑🛑 IP `{}` logout from `{}` (is was `{}` using `{}`) at `{}`",
-        addr, host, user, auth_info, when
-    );
-    info!("{}", msg);
+    let mut msg;
+    match pam_type {
+        PamType::OpenSession => {
+            msg = settings.open_session_message.clone();
+        }
+        PamType::CloseSession => {
+            msg = settings.close_session_message.clone();
+        }
+    }
+    // Replace placeholders
+    msg = msg.replace("{addr}", &addr);
+    msg = msg.replace("{hostname}", &hostname);
+    msg = msg.replace("{user}", &user);
+    msg = msg.replace("{auth_info}", auth_info.to_string().as_str());
+    msg = msg.replace("{when}", &when);
+
     let res = send_slack_msg(channel_id, token, msg);
     if res.is_err() {
         error!("Cannot send slack message");
@@ -132,21 +133,21 @@ fn close_session(channel_id: String, token: String) {
 fn main() {
     SimpleLogger::new().init().unwrap();
 
-    let args: Vec<String> = std::env::args().collect();
-    if args.len() < 3 {
-        eprintln!("Usage: {} <channel_id> <token>", args[0]);
-        return;
-    }
+    let config_file = format!("/etc/{}", env!("CARGO_PKG_NAME"));
+    let settings = Settings::new(config_file.as_str());
+    // dbg!(&settings);
 
-    let channel_id = args[1].clone();
-    let token = args[2].clone();
+    if settings.is_err() {
+        eprintln!("Cannot read settings: {:?}", settings.err());
+        std::process::exit(1);
+    }
 
     let pam_type = get_pam_type();
 
     if pam_type == "open_session" {
-        open_session(channel_id, token);
+        handle_pam(settings.unwrap(), PamType::OpenSession);
     } else if pam_type == "close_session" {
-        close_session(channel_id, token);
+        handle_pam(settings.unwrap(), PamType::CloseSession);
     } else {
         eprintln!("Unknown environment `PAM_TYPE`={:?}", pam_type);
     }
