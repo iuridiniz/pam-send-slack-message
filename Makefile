@@ -1,8 +1,9 @@
 .PHONY: all clean install fake-open-session fake-close-session cross _cross _upx release deb deb-x86_64 deb-i686 deb-arm64
 
 BINARY=pam-send-slack-message
+SETTINGS_FILE=src/settings.default.toml
 
-DESTDIR ?= /usr/local/bin
+DESTDIR ?= /
 PAM_SSHD_CONFIG ?= /etc/pam.d/sshd
 SLACK_CHANNEL_ID ?= slack_channel_id
 SLACK_TOKEN ?= slack_token
@@ -75,20 +76,16 @@ deb-i686: $(BINARY).i686.musl
 deb-arm64: $(BINARY).aarch64.musl
 	cargo deb -v -o ./ --target aarch64-unknown-linux-musl --no-build
 
-# requires nightly, rust-src, rust-std
-# $(BINARY).musl-optz: $(wildcard src/*) Cargo.toml
-# 	RUSTFLAGS="$(RUSTFLAGS) -L/usr/lib/x86_64-linux-musl/ -Copt-level=z -Cpanic=abort" cargo +nightly build -v -Z unstable-options -Z build-std=std,panic_abort -Z build-std-features=panic_immediate_abort --release --target x86_64-unknown-linux-musl
-# 	cp target/x86_64-unknown-linux-musl/release/$(BINARY) $(BINARY).musl-optz
-# 	strip $(BINARY).musl-optz
 
 install: $(BINARY)
-	install -b -m 0755 -p $(BINARY) $(DESTDIR)/$(BINARY)
+	mkdir --parents $(DESTDIR)/usr/local/bin/ $(DESTDIR)/etc/
+	install --backup --mode=0755 --strip --preserve-timestamps $(BINARY) $(DESTDIR)/usr/local/bin/$(BINARY)
+	install --backup --mode=0755 --preserve-timestamps $(SETTINGS_FILE) $(DESTDIR)/etc/$(BINARY).toml
 
 	@echo "Editing $(PAM_SSHD_CONFIG) if needed"
-	@grep -qE '^session optional pam_exec.so.* $(DESTDIR)/$(BINARY)' $(PAM_SSHD_CONFIG) || \
-		echo 'session optional pam_exec.so $(DESTDIR)/$(BINARY) $(SLACK_CHANNEL_ID) $(SLACK_TOKEN)' >> $(PAM_SSHD_CONFIG)
+	grep -qE '^session optional pam_exec.so.* $(DESTDIR)/usr/local/bin/$(BINARY)' $(PAM_SSHD_CONFIG) || \
+		echo 'session optional pam_exec.so $(DESTDIR)/usr/local/bin/$(BINARY)' >> $(PAM_SSHD_CONFIG)
 
-	chmod o-r $(PAM_SSHD_CONFIG)
 
 fake-open-session: $(BINARY)
 	@/usr/bin/env \
